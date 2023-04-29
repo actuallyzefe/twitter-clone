@@ -40,4 +40,13 @@ export class UsersController {
     }
     return this.userService.followUser(req, postedNickname);
   }
+  @UseGuards(AuthGuard())
+  @Patch('unfollowUser')
+  unfollowUser(@Request() req: any, @Body() body: FollowLogicDto) {
+    const { postedNickname } = body;
+    if (!postedNickname) {
+      throw new BadRequestException('postedNickname is required');
+    }
+    return this.userService.unfollowUser(req, postedNickname);
+  }
 }

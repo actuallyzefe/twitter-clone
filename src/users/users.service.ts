@@ -3,6 +3,7 @@ import {
   Body,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   Request,
 } from '@nestjs/common';
@@ -37,10 +38,13 @@ export class UsersService {
     await this.userModel.findOne({ id });
   }
 
+  // NEED REFACTORING // follow and unfollow methods kinda similar. We can refactor them later
   async followUser(@Request() req: any, postedNickname: string) {
     const currentUser = req.user;
 
-    if (currentUser !== postedNickname) {
+    if (currentUser.nickname === postedNickname) {
+      throw new BadRequestException('You cannot follow yourself');
+    } else {
       try {
         const user = await this.userModel.findOne({
           nickname: currentUser.nickname,
@@ -48,8 +52,13 @@ export class UsersService {
         const otherUser = await this.userModel.findOne({
           nickname: postedNickname,
         });
+
+        if (!otherUser) {
+          throw new NotFoundException('User not found');
+        }
+
         //@ts-ignore
-        if (!otherUser.followers.includes(currentUser)) {
+        if (!otherUser.followers.includes(currentUser.nickname)) {
           await user.updateOne({
             $push: { followings: postedNickname },
           });
@@ -63,7 +72,60 @@ export class UsersService {
         }
       } catch (e) {
         console.log(e);
-        return e;
+
+        if (e instanceof NotFoundException) {
+          throw new NotFoundException(e.message);
+        } else if (e instanceof BadRequestException) {
+          throw new BadRequestException(e.message);
+        } else {
+          throw new InternalServerErrorException(e.message);
+        }
+      }
+    }
+  }
+
+  // NEED REFACTORING // follow and unfollow methods kinda similar. We can refactor them later
+  async unfollowUser(@Request() req: any, postedNickname: string) {
+    const currentUser = req.user;
+
+    if (currentUser.nickname === postedNickname) {
+      throw new BadRequestException('You cannot unfollow yourself');
+    } else {
+      try {
+        const user = await this.userModel.findOne({
+          nickname: currentUser.nickname,
+        });
+        const otherUser = await this.userModel.findOne({
+          nickname: postedNickname,
+        });
+
+        if (!otherUser) {
+          throw new NotFoundException('User not found');
+        }
+
+        //@ts-ignore
+        if (otherUser.followers.includes(currentUser.nickname)) {
+          await user.updateOne({
+            $pull: { followings: postedNickname },
+          });
+
+          await otherUser.updateOne({
+            $pull: { followers: currentUser.nickname },
+          });
+          return `${otherUser.nickname} unfollowed`;
+        } else {
+          throw new BadRequestException('You can not unfollow this user');
+        }
+      } catch (e) {
+        console.log(e);
+
+        if (e instanceof NotFoundException) {
+          throw new NotFoundException(e.message);
+        } else if (e instanceof BadRequestException) {
+          throw new BadRequestException(e.message);
+        } else {
+          throw new InternalServerErrorException(e.message);
+        }
       }
     }
   }
