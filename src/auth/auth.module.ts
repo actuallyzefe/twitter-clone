@@ -5,9 +5,7 @@ import { UserSchema } from 'src/schemas/user.schema';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
 import { AuthController } from './auth.controller';
-
 import { JwtStrategy } from './jwt.strategy';
 import { PasswordService } from 'src/helpers/Password.service';
 import { InvalidUserservice } from 'src/helpers/InvalidUser.service';
