@@ -1,6 +1,5 @@
-import { IsArray, IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { Roles, User } from '../../schemas/user.schema';
-import { Exclude } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Roles } from '../../schemas/user.schema';
 
 export class SignupDto {
   @IsNotEmpty()

@@ -3,7 +3,6 @@ import {
   Get,
   UseGuards,
   Request,
-  Post,
   Body,
   BadRequestException,
   Patch,
@@ -12,7 +11,6 @@ import { UsersService } from './users.service';
 import { Serialize } from './interceptors/Serializeuser.interceptor';
 import { User } from '../schemas/user.schema';
 import { AuthGuard } from '@nestjs/passport';
-
 import { FollowLogicDto } from './dtos/FollowLogic.dto';
 
 @Serialize(User)
