@@ -5,11 +5,12 @@ import { UserSchema } from 'src/schemas/user.schema';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from 'src/users/users.module';
-import { PasswordService } from 'src/services/Password.service';
+
 import { AuthController } from './auth.controller';
-import { InvalidUserservice } from 'src/services/InvalidUser.service';
+
 import { JwtStrategy } from './jwt.strategy';
+import { PasswordService } from 'src/helpers/Password.service';
+import { InvalidUserservice } from 'src/helpers/InvalidUser.service';
 
 @Module({
   imports: [
