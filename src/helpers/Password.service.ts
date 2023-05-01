@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { SignupDto } from 'src/users/dtos/Signup.dto';
 
-export class PasswordService {
+export class PasswordHelper {
   constructor() {}
 
   checkPassword(password: string, passwordConfirm: string) {

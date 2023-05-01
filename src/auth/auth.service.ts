@@ -5,29 +5,29 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SignupDto } from 'src/users/dtos/Signup.dto';
 import { LoginDto } from 'src/users/dtos/Login.dto';
-import { PasswordService } from 'src/helpers/Password.service';
-import { InvalidUserservice } from 'src/helpers/InvalidUser.service';
+import { PasswordHelper } from 'src/helpers/Password.service';
+import { InvalidUsersHelper } from 'src/helpers/InvalidUser.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
-    private passwordService: PasswordService,
-    private invalidUserservice: InvalidUserservice,
+    private passwordHelper: PasswordHelper,
+    private invalidUsersHelper: InvalidUsersHelper,
   ) {}
 
   async signup(body: SignupDto) {
     const { nickname, email, password, passwordConfirm } = body;
 
     // checking if the posted email is valid
-    await this.invalidUserservice.isUserValid(email, nickname);
+    await this.invalidUsersHelper.isUserValid(email, nickname);
 
     // Checking the passwordConfirmation
-    this.passwordService.checkPassword(password, passwordConfirm);
+    this.passwordHelper.checkPassword(password, passwordConfirm);
 
     // hashing
-    await this.passwordService.hashPassword(body);
+    await this.passwordHelper.hashPassword(body);
 
     // creating user
     const user = await this.userModel.create(body);
@@ -49,7 +49,7 @@ export class AuthService {
     const storedHash = user.password;
 
     // comparing passwords
-    await this.passwordService.comparePasswords(password, storedHash);
+    await this.passwordHelper.comparePasswords(password, storedHash);
 
     // signing the jsonwebtoken
     const token = this.jwtService.sign({ id: user._id });

@@ -7,8 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
-import { PasswordService } from 'src/helpers/Password.service';
-import { InvalidUserservice } from 'src/helpers/InvalidUser.service';
+import { PasswordHelper } from 'src/helpers/Password.service';
+import { InvalidUsersHelper } from 'src/helpers/InvalidUser.service';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { InvalidUserservice } from 'src/helpers/InvalidUser.service';
     ConfigModule,
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
-  providers: [AuthService, PasswordService, InvalidUserservice, JwtStrategy],
+  providers: [AuthService, PasswordHelper, InvalidUsersHelper, JwtStrategy],
   exports: [JwtStrategy, JwtModule, PassportModule],
   controllers: [AuthController],
 })

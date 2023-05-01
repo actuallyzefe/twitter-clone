@@ -3,7 +3,7 @@ import { User } from '../schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-export class InvalidUserservice {
+export class InvalidUsersHelper {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async isUserValid(email: string, nickname: string) {
