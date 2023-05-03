@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Tweet } from 'src/schemas/tweet.schema';
 import { User } from 'src/schemas/user.schema';
 import { CreateTweetDto } from './dtos/Create-tweet.dto';
+
 @Injectable()
 export class TweetService {
   constructor(
@@ -30,5 +31,29 @@ export class TweetService {
 
   async getAllTweets() {
     return this.tweetModel.find();
+  }
+
+  async likeDislikeTweet(user: User, id: string) {
+    const tweet = await this.tweetModel.findById(id);
+
+    if (!tweet) {
+      throw new NotFoundException('No tweet found');
+    }
+
+    //@ts-ignore
+    if (!tweet.likes.includes(user.nickname)) {
+      await tweet.updateOne({ $push: { likes: user.nickname } });
+      return 'Post liked';
+    }
+    await tweet.updateOne({ $pull: { likes: user.nickname } });
+    return 'Post disliked';
+  }
+
+  async deleteTweet(id: string) {
+    const tweet = await this.tweetModel.findByIdAndDelete(id);
+    if (!tweet) {
+      throw new NotFoundException('No document found with that ID');
+    }
+    return 'DELETED';
   }
 }
