@@ -6,10 +6,11 @@ import { User, UserSchema } from '../schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from 'src/auth/auth.module';
 
-import { APP_INTERCEPTOR } from '@nestjs/core';
-
 @Module({
-  exports: [UsersService],
+  exports: [
+    UsersService,
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+  ],
   imports: [
     JwtModule,
     AuthModule,

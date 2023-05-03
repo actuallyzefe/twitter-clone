@@ -7,8 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
-import { PasswordHelper } from 'src/helpers/Password.service';
-import { InvalidUsersHelper } from 'src/helpers/InvalidUser.service';
+import { PasswordHelper } from 'src/helpers/Password.helper';
+import { InvalidUsersHelper } from 'src/helpers/InvalidUser.helper';
 
 @Module({
   imports: [

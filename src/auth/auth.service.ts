@@ -5,8 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SignupDto } from 'src/users/dtos/Signup.dto';
 import { LoginDto } from 'src/users/dtos/Login.dto';
-import { PasswordHelper } from 'src/helpers/Password.service';
-import { InvalidUsersHelper } from 'src/helpers/InvalidUser.service';
+import { PasswordHelper } from 'src/helpers/Password.helper';
+import { InvalidUsersHelper } from 'src/helpers/InvalidUser.helper';
 
 @Injectable()
 export class AuthService {

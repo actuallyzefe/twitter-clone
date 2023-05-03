@@ -7,6 +7,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersController } from './users/users.controller';
+import { TweetModule } from './tweet/tweet.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -16,6 +18,7 @@ import { UsersController } from './users/users.controller';
     MongooseModule.forRoot(process.env.URI),
     UsersModule,
     AuthModule,
+    TweetModule,
   ],
   controllers: [AppController],
   providers: [AppService],
