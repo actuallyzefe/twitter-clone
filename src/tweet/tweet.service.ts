@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Tweet } from 'src/schemas/tweet.schema';
@@ -49,11 +54,18 @@ export class TweetService {
     return 'Post disliked';
   }
 
-  async deleteTweet(id: string) {
-    const tweet = await this.tweetModel.findByIdAndDelete(id);
+  async deleteTweet(req: any, id: string) {
+    const tweet = await this.tweetModel.findById(id);
     if (!tweet) {
       throw new NotFoundException('No document found with that ID');
     }
+
+    if (req.user.nickname !== tweet.User) {
+      throw new BadRequestException('You are not allowed to do that');
+    }
+
+    await this.tweetModel.deleteOne({ _id: tweet._id });
+
     return 'DELETED';
   }
 }

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -36,7 +37,7 @@ export class TweetController {
   }
 
   @Delete('delete/:id')
-  deleteTweet(@Param('id') id: string) {
-    return this.tweetService.deleteTweet(id);
+  deleteTweet(@Request() req: any, @Param('id') id: string) {
+    return this.tweetService.deleteTweet(req, id);
   }
 }
