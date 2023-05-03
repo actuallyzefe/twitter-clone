@@ -1,7 +1,7 @@
-import { IsNotEmpty } from 'class-validator';
-import mongoose from 'mongoose';
+import { IsNotEmpty, MaxLength } from 'class-validator';
 
 export class CreateTweetDto {
   @IsNotEmpty()
-  user: mongoose.Schema.Types.ObjectId;
+  @MaxLength(150)
+  tweet: string;
 }

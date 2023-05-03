@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { TweetService } from './tweet.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateTweetDto } from './dtos/Create-tweet.dto';
 
 @Controller('tweet')
 export class TweetController {
@@ -15,7 +16,7 @@ export class TweetController {
 
   @UseGuards(AuthGuard())
   @Post('post')
-  postTweet(@Body() body: any, @Request() req: any) {
+  postTweet(@Body() body: CreateTweetDto, @Request() req: any) {
     const id = req.user._id;
     return this.tweetService.createTweet(body, id);
   }
