@@ -51,7 +51,7 @@ export class AuthService {
     const { email, password } = userCredentails;
 
     // getting the user
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email }).select('+password');
     if (!user) throw new NotFoundException();
 
     // comparing passwords
