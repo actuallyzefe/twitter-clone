@@ -1,36 +1,44 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/schemas/user.schema';
+import { User } from 'src/users/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SignupDto } from 'src/users/dtos/Signup.dto';
 import { LoginDto } from 'src/users/dtos/Login.dto';
-import { PasswordHelper } from 'src/helpers/Password.helper';
-import { InvalidUsersHelper } from 'src/helpers/InvalidUser.helper';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
-    private passwordHelper: PasswordHelper,
-    private invalidUsersHelper: InvalidUsersHelper,
   ) {}
 
-  async signup(body: SignupDto) {
-    const { nickname, email, password, passwordConfirm } = body;
+  async signup(userCredentails: SignupDto) {
+    const { nickname, email, password, passwordConfirm } = userCredentails;
 
-    // checking if the posted email is valid
-    await this.invalidUsersHelper.isUserValid(email, nickname);
+    // checking if the posted email AND nickname is valid
+    const invalidEmail = await this.userModel.findOne({ email });
+    const invalidNickname = await this.userModel.findOne({ nickname });
+    if (invalidEmail || invalidNickname) throw new BadRequestException();
 
     // Checking the passwordConfirmation
-    this.passwordHelper.checkPassword(password, passwordConfirm);
+    if (password !== passwordConfirm) {
+      throw new BadRequestException('Passwords are not the same');
+    }
 
     // hashing
-    await this.passwordHelper.hashPassword(body);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    userCredentails.password = hashedPassword;
+    userCredentails.passwordConfirm = undefined;
 
     // creating user
-    const user = await this.userModel.create(body);
+    const user = await this.userModel.create(userCredentails);
 
     // signing the jsonwebtoken
     const token = this.jwtService.sign({ id: user._id });
@@ -39,17 +47,17 @@ export class AuthService {
     return { token };
   }
 
-  async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
+  async login(userCredentails: LoginDto) {
+    const { email, password } = userCredentails;
 
     // getting the user
     const user = await this.userModel.findOne({ email });
-    if (!user) throw new NotFoundException('No user found');
-
-    const storedHash = user.password;
+    if (!user) throw new NotFoundException();
 
     // comparing passwords
-    await this.passwordHelper.comparePasswords(password, storedHash);
+    const storedAndHashedPassword = user.password;
+    const isMatch = await bcrypt.compare(password, storedAndHashedPassword);
+    if (!isMatch) throw new BadRequestException();
 
     // signing the jsonwebtoken
     const token = this.jwtService.sign({ id: user._id });

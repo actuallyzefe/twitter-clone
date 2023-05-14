@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Serialize } from './interceptors/Serializeuser.interceptor';
-import { User } from '../schemas/user.schema';
+import { User } from './user.schema';
 import { AuthGuard } from '@nestjs/passport';
 import { FollowLogicDto } from './dtos/FollowLogic.dto';
 
@@ -31,8 +31,8 @@ export class UsersController {
 
   @UseGuards(AuthGuard())
   @Patch('followUser')
-  followUser(@Request() req: any, @Body() body: FollowLogicDto) {
-    const { postedNickname } = body;
+  followUser(@Request() req: any, @Body() userCredentials: FollowLogicDto) {
+    const { postedNickname } = userCredentials;
     if (!postedNickname) {
       throw new BadRequestException('postedNickname is required');
     }
@@ -40,8 +40,8 @@ export class UsersController {
   }
   @UseGuards(AuthGuard())
   @Patch('unfollowUser')
-  unfollowUser(@Request() req: any, @Body() body: FollowLogicDto) {
-    const { postedNickname } = body;
+  unfollowUser(@Request() req: any, @Body() userCredentails: FollowLogicDto) {
+    const { postedNickname } = userCredentails;
     if (!postedNickname) {
       throw new BadRequestException('postedNickname is required');
     }

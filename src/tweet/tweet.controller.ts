@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -21,8 +20,8 @@ export class TweetController {
 
   @Post('post')
   postTweet(@Body() body: CreateTweetDto, @Request() req: any) {
-    const id = req.user._id;
-    return this.tweetService.createTweet(body, id);
+    const user = req.user;
+    return this.tweetService.createTweet(body, user);
   }
 
   @Get('tweets')
