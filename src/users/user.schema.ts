@@ -34,10 +34,10 @@ export class User {
   bio: string;
 
   @Prop({ ref: 'User', default: [] })
-  followers: [];
+  followers: string[];
 
   @Prop({ ref: 'User', default: [] })
-  followings: [];
+  followings: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

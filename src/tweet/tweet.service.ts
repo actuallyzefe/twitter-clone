@@ -35,7 +35,6 @@ export class TweetService {
       throw new NotFoundException();
     }
 
-    // @ts-ignore
     if (!tweet.likes.includes(user.nickname)) {
       await tweet.updateOne({ $push: { likes: user.nickname } });
       return 'Post liked';

@@ -55,7 +55,6 @@ export class UsersService {
           throw new NotFoundException('User not found');
         }
 
-        //@ts-ignore
         if (!otherUser.followers.includes(currentUser.nickname)) {
           await user.updateOne({
             $push: { followings: postedNickname },
@@ -101,7 +100,6 @@ export class UsersService {
           throw new NotFoundException('User not found');
         }
 
-        //@ts-ignore
         if (otherUser.followers.includes(currentUser.nickname)) {
           await user.updateOne({
             $pull: { followings: postedNickname },

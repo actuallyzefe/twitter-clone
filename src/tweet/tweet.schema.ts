@@ -8,7 +8,7 @@ export class Tweet {
   tweet: string;
 
   @Prop({ default: [] })
-  likes: [];
+  likes: string[];
 
   @Prop({ default: Date.now() })
   createdAt: Date;
