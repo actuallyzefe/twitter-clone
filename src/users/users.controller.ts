@@ -17,11 +17,6 @@ import { FollowLogicDto } from './dtos/FollowLogic.dto';
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
-  @Get('allUsers')
-  @UseGuards(AuthGuard())
-  findAll() {
-    return this.userService.findAll();
-  }
 
   @Get('me')
   @UseGuards(AuthGuard())
