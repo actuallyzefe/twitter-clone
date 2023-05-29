@@ -13,8 +13,10 @@ import { Model } from 'mongoose';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
+  uploadFile() {}
+
   // NEED REFACTORING // follow and unfollow methods kinda similar. We can refactor them later
-  async followUser(@Request() req: any, postedNickname: string) {
+  async followUser(req: any, postedNickname: string) {
     const currentUser = req.user;
 
     if (currentUser.nickname === postedNickname) {

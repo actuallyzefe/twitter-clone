@@ -12,7 +12,6 @@ import {
 import { TweetService } from './tweet.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateTweetDto } from './dtos/Create-tweet.dto';
-import { UsersService } from 'src/users/users.service';
 
 @UseGuards(AuthGuard())
 @Controller('tweet')

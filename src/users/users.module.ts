@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from 'src/auth/auth.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   exports: [
@@ -15,6 +16,9 @@ import { AuthModule } from 'src/auth/auth.module';
     JwtModule,
     AuthModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MulterModule.register({
+      dest: '/img',
+    }),
   ],
   controllers: [UsersController],
   providers: [UsersService],

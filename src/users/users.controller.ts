@@ -6,17 +6,27 @@ import {
   Body,
   BadRequestException,
   Patch,
+  UseInterceptors,
+  UploadedFile,
+  Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Serialize } from './interceptors/Serializeuser.interceptor';
 import { User } from './user.schema';
 import { AuthGuard } from '@nestjs/passport';
 import { FollowLogicDto } from './dtos/FollowLogic.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Serialize(User)
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
+
+  @Post('uploadphoto')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+  }
 
   @Get('me')
   @UseGuards(AuthGuard())
