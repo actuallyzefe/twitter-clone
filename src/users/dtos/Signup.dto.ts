@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Roles } from '../user.schema';
 
 export class SignupDto {
@@ -22,11 +22,14 @@ export class SignupDto {
   @IsString()
   passwordConfirm: string;
 
-  bio: string;
+  @IsOptional()
+  @IsString()
+  bio?: string;
 
   role: Roles;
 
-  avatar: string;
+  @IsOptional()
+  avatar?: string;
 
   followers: [];
 
